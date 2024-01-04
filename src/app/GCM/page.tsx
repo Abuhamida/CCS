@@ -100,7 +100,7 @@ const GCM: React.FC = () => {
   return (
     <div className="flex flex-col gap-5 p-5 items-center pt-24">
       <h1 className="text-3xl font-bold text-[#000066] ">GCM Classifier</h1>
-      <div className="flex gap-5">
+      <div className="flex flex-col md:flex-row gap-5">
         <div className=" flex flex-col ">
           <label className="label-text ">Number of data points:</label>
           <input
@@ -138,7 +138,7 @@ const GCM: React.FC = () => {
         ))}
       </div>
 
-      <div className="flex gap-10">
+      <div className="flex flex-col md:flex-row gap-10">
         <div className="flex flex-col gap-5 items-center pt-5 text-2xl font-semibold">
           <h3>Enter data for Class A:</h3>
           {classAInput.map((value, index) => (
