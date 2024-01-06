@@ -235,12 +235,14 @@ const Home: React.FC = () => {
         selectedHypotheses,
         selectedEvidences[0]
       );
+      console.log(selectedHypotheses)
       const results = [];
       for (let i = 0; i < selectedHypotheses.length; i++) {
-        const roundedResult = posteriorSingleEvidence[i].toFixed(2);
-        const r = `h${i + 1} | ${selectedEvidences.join(" ")} = ${
+        const roundedResult = posteriorSingleEvidence[i].toFixed(3);
+        const r = `${selectedHypotheses[i]} | ${selectedEvidences.join(" ")} = ${
           roundedResult
         }`;
+        console.log(selectedHypotheses[i])
         // Your code using 'r' inside the loop
         results.push(r);
       }
@@ -260,7 +262,7 @@ const Home: React.FC = () => {
 
       for (let i = 0; i < selectedHypotheses.length; i++) {
         const roundedResult = posteriorMultipleEvidences[i].toFixed(2);
-        const r = `h${i + 1} | ${selectedEvidences.join(" ")} = ${
+        const r = `${selectedHypotheses[i]} | ${selectedEvidences.join(" ")} = ${
           roundedResult
         }`;
         // Your code using 'r' inside the loop
@@ -323,28 +325,6 @@ const Home: React.FC = () => {
           </label>
         </div>
       </div>
-      {calculationType === "multiple" && (
-        <div className="flex flex-col justify-center items-center gap-2">
-          <label className="label-text">Select Evidence:</label>
-          {Object.keys(probabilities.evidence).map((evidence) => (
-            <label key={evidence}>
-              <input
-                type="checkbox"
-                value={evidence}
-                checked={selectedEvidences.includes(evidence)}
-                onChange={() =>
-                  handleSelectionChange(
-                    "evidence",
-                    evidence,
-                    !selectedEvidences.includes(evidence)
-                  )
-                }
-              />
-              {evidence}
-            </label>
-          ))}
-        </div>
-      )}
       <div className="flex justify-center items-center gap-2">
         {renderPriorProbabilityInputs()}
       </div>
@@ -359,7 +339,7 @@ const Home: React.FC = () => {
             !num_H ||
             !num_E ||
             selectedEvidences.length === 0 ||
-            (calculationType === "single" && selectedEvidences.length !== 1)
+            (calculationType === "single" && selectedEvidences.length !== 1) ||(calculationType === "multiple" && selectedEvidences.length == 1)
           }
         >
           Calculate Posterior
@@ -401,7 +381,7 @@ const Home: React.FC = () => {
                 />
               </svg>
 
-              <span >
+              <span className=" uppercase" >
                 {result && result[index] !== undefined && `${value} `}
               </span>
             </div>
