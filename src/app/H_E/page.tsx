@@ -12,7 +12,7 @@ import {
 const Home: React.FC = () => {
   const [num_H, setNum_H] = useState<number | undefined>(undefined);
   const [num_E, setNum_E] = useState<number | undefined>(undefined);
-  const [result, setResult] = useState<number[]>([]);
+  const [result, setResult] = useState<string[]>([]);
   const [error, setError] = useState<string>();
 
   const [probabilities, setProbabilities] = useState<Probabilities>({
@@ -235,8 +235,16 @@ const Home: React.FC = () => {
         selectedHypotheses,
         selectedEvidences[0]
       );
-      setResult([...posteriorSingleEvidence]);
-      setError("")
+      const results = [];
+      for (let i = 0; i < selectedHypotheses.length; i++) {
+        const r = `h${i + 1} | ${selectedEvidences.join(" ")} = ${
+          posteriorSingleEvidence[i]
+        }`;
+        // Your code using 'r' inside the loop
+        results.push(r);
+      }
+      setResult(results);
+      setError("");
     } else if (
       calculationType === "multiple" &&
       selectedEvidences.length > 1 &&
@@ -247,9 +255,17 @@ const Home: React.FC = () => {
         selectedHypotheses,
         selectedEvidences
       );
-      setResult([...posteriorMultipleEvidences]);
-      setError("")
+      const results = [];
 
+      for (let i = 0; i < selectedHypotheses.length; i++) {
+        const r = `h${i + 1} | ${selectedEvidences.join(" ")} = ${
+          posteriorMultipleEvidences[i]
+        }`;
+        // Your code using 'r' inside the loop
+        results.push(r);
+      }
+      setResult(results);
+      setError("");
     } else {
       setError("Invalid selection or no selection made.");
     }
@@ -257,7 +273,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="pt-24 flex flex-col gap-5 items-center min-h-screen">
-      <h1>Bayesian Probability Calculations</h1>
+      <h1 className="text-3xl font-bold text-[#000066] ">
+        Bayesian Probability Calculations
+      </h1>
       <div className="flex gap-5">
         <div className="flex flex-col">
           <label className="label-text">Number of Hypotheses:</label>
@@ -333,7 +351,7 @@ const Home: React.FC = () => {
       </div>
       <div className="flex gap-2">
         <button
-          className="btn btn-primary"
+          className="btn btn-outline btn-info"
           onClick={calculatePosterior}
           disabled={
             !num_H ||
@@ -346,7 +364,7 @@ const Home: React.FC = () => {
         </button>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-5 flex flex-col lg:flex-row gap-5">
         {error ? (
           <div role="alert" className="alert alert-error">
             <svg
@@ -365,11 +383,25 @@ const Home: React.FC = () => {
             <span>{error}</span>
           </div>
         ) : (
-          selectedHypotheses.map((value, index) => (
-            <div key={index}>
-              {result &&
-                result[index] !== undefined &&
-                `${value} | ${selectedEvidences.join(" ")} = ${result[index]}`}
+          result.map((value, index) => (
+            <div  key={index} role="alert" className="alert alert-info flex  items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+
+              <span>
+                {result && result[index] !== undefined && `${value} `}
+              </span>
             </div>
           ))
         )}
