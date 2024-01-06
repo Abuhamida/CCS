@@ -237,8 +237,9 @@ const Home: React.FC = () => {
       );
       const results = [];
       for (let i = 0; i < selectedHypotheses.length; i++) {
+        const roundedResult = posteriorSingleEvidence[i].toFixed(2);
         const r = `h${i + 1} | ${selectedEvidences.join(" ")} = ${
-          posteriorSingleEvidence[i]
+          roundedResult
         }`;
         // Your code using 'r' inside the loop
         results.push(r);
@@ -258,8 +259,9 @@ const Home: React.FC = () => {
       const results = [];
 
       for (let i = 0; i < selectedHypotheses.length; i++) {
+        const roundedResult = posteriorMultipleEvidences[i].toFixed(2);
         const r = `h${i + 1} | ${selectedEvidences.join(" ")} = ${
-          posteriorMultipleEvidences[i]
+          roundedResult
         }`;
         // Your code using 'r' inside the loop
         results.push(r);
@@ -384,7 +386,7 @@ const Home: React.FC = () => {
           </div>
         ) : (
           result.map((value, index) => (
-            <div  key={index} role="alert" className="alert alert-info flex  items-center justify-center">
+            <div  key={index} role="alert" className="alert alert-info flex  items-center justify-center w-72">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="stroke-current shrink-0 h-6 w-6"
@@ -399,7 +401,7 @@ const Home: React.FC = () => {
                 />
               </svg>
 
-              <span>
+              <span >
                 {result && result[index] !== undefined && `${value} `}
               </span>
             </div>
