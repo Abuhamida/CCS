@@ -31,9 +31,9 @@ function Navbar() {
             <li>
               <a href="/H_E">Bayesian</a>
             </li>
-            {/* <li>
-              <a>Item 3</a>
-            </li> */}
+            <li>
+              <a href="/nav">Naive Bayes</a>
+            </li>
           </ul>
         </div>
         <a href="/" className="font-bold ml-3 p-2  text-4xl text-[#00A0F3] hover:text-[#fafbf4] hover:bg-[#00A0F3] rounded-xl">
@@ -48,9 +48,9 @@ function Navbar() {
           <li>
             <a className="hover:bg-[#000066]  hover:text-[#fafbf4] mr-2" href="/H_E">Bayesian</a>
           </li>
-          {/* <li>
-            <a className="hover:bg-[#000066]  hover:text-[#fafbf4] mr-2">Item 3</a>
-          </li> */}
+          <li>
+            <a className="hover:bg-[#000066]  hover:text-[#fafbf4] mr-2" href="/nav">Naive Bayes</a>
+          </li>
         </ul>
       </div>
       {/* <div className="navbar-end">

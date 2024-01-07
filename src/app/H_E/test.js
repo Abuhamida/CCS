@@ -1,94 +1,113 @@
-// Given probabilities
-let probabilities = {
-    hypotheses: { h1: 0.40, h2: 0.35, h3: 0.25 },
-    evidence: {
-        e1: { h1: 0.3, h2: 0.8, h3: 0.5 },
-        e2: { h1: 0.9, h2: 0.0, h3: 0.7 },
-        e3: { h1: 0.6, h2: 0.7, h3: 0.9 }
-    }
-};
+class WeatherCarClassifier {
+  constructor() {
+    this.classProbabilities = {};
+    this.featureProbabilities = {};
+  }
 
-// Function to calculate the prior probability of a hypothesis
-function priorProbability(hypothesis) {
-    return probabilities.hypotheses[hypothesis];
-}
+  train(data) {
+    const totalSamples = data.length;
+    this.classProbabilities = {};
 
-// Function to calculate the likelihood of evidence given a hypothesis
-function likelihoodFunction(evidence, hypothesis) {
-    return probabilities.evidence[evidence] ? (probabilities.evidence[evidence][hypothesis] || 0) : 0;
-}
+    data.forEach((sample) => {
+      const decision = sample.decision;
+      if (!this.classProbabilities[decision]) {
+        this.classProbabilities[decision] = 1;
+      } else {
+        this.classProbabilities[decision]++;
+      }
+    });
 
+    this.featureProbabilities = {};
 
+    Object.keys(data[0].features).forEach((feature) => {
+      this.featureProbabilities[feature] = {};
 
-// Function to calculate the marginal probability of evidence given all hypotheses
-function marginalProbability(hypotheses, evidences) {
-    let marginal = 0;
-    for (let i = 0; i < hypotheses.length; i++) {
-        let jointLikelihood = 1;
-        for (let j = 0; j < evidences.length; j++) {
-            jointLikelihood *= likelihoodFunction(evidences[j], hypotheses[i]);
+      data.forEach((sample) => {
+        const decision = sample.decision;
+        const value = sample.features[feature];
+
+        if (!this.featureProbabilities[feature][decision]) {
+          this.featureProbabilities[feature][decision] = {};
         }
-        marginal += priorProbability(hypotheses[i]) * jointLikelihood;
-    }
-    return marginal;
-}
 
-// Function to calculate the posterior probability for Multiple Evidences and Multiple Hypotheses
-function calculatePosteriorMultipleEvidences(hypotheses, evidences) {
-    let posteriorProbabilities = [];
-    
-    // Iterate over each hypothesis
-    for (let i = 0; i < hypotheses.length; i++) {
-        // Calculate the joint likelihood
-        let jointLikelihood = 1;
-        for (let j = 0; j < evidences.length; j++) {
-            jointLikelihood *= likelihoodFunction(evidences[j], hypotheses[i]);
+        if (!this.featureProbabilities[feature][decision][value]) {
+          this.featureProbabilities[feature][decision][value] = 1;
+        } else {
+          this.featureProbabilities[feature][decision][value]++;
         }
-        
-        // Calculate the posterior probability
-        let posterior = (jointLikelihood * priorProbability(hypotheses[i])) / marginalProbability(hypotheses, evidences);
-        posteriorProbabilities.push(posterior);
-    }
-    
-    return posteriorProbabilities;
-}
+      });
+    });
 
-// Function to calculate the posterior probability for Single Evidence and Multiple Hypotheses
-function calculatePosteriorSingleEvidence(hypotheses, evidence) {
-    let posteriorProbabilities = [];
-    
-    // Iterate over each hypothesis
-    for (let i = 0; i < hypotheses.length; i++) {
-        // Calculate the posterior probability
-        let posterior = (likelihoodFunction(evidence, hypotheses[i]) * priorProbability(hypotheses[i])) / marginalProbability(hypotheses, [evidence]);
-        posteriorProbabilities.push(posterior);
-    }
-    
-    return posteriorProbabilities;
+    Object.keys(this.classProbabilities).forEach((decision) => {
+      this.classProbabilities[decision] /= totalSamples;
+    });
+
+    Object.keys(this.featureProbabilities).forEach((feature) => {
+      Object.keys(this.featureProbabilities[feature]).forEach((decision) => {
+        const totalValues = Object.values(this.featureProbabilities[feature][decision]).reduce((acc, count) => acc + count, 0);
+
+        Object.keys(this.featureProbabilities[feature][decision]).forEach((value) => {
+          this.featureProbabilities[feature][decision][value] /= totalValues;
+        });
+      });
+    });
+  }
+
+  predict(features) {
+    let maxProbability = -Infinity;
+    let predictedDecision = null;
+  
+    Object.keys(this.classProbabilities).forEach((decision) => {
+      let probability = this.classProbabilities[decision];
+  
+      Object.keys(features).forEach((feature) => {
+        const value = features[feature];
+  
+        if (
+          this.featureProbabilities[feature] &&
+          this.featureProbabilities[feature][decision] &&
+          this.featureProbabilities[feature][decision][value]
+        ) {
+          probability *= this.featureProbabilities[feature][decision][value];
+        }
+      });
+  
+      console.log(`Decision: ${decision}, Probability: ${probability}`);
+  
+      if (probability > maxProbability) {
+        maxProbability = probability;
+        predictedDecision = decision;
+      }
+    });
+  
+    return predictedDecision;
+  }
+  
 }
 
 // Example usage:
-let hypotheses = ['h1', 'h2', 'h3'];
-let evidences = ['e1', 'e2', 'e3'];
 
-// Calculate posterior probabilities for Multiple Evidences and Multiple Hypotheses
-let posteriorMultipleEvidences = calculatePosteriorMultipleEvidences(hypotheses, evidences);
-console.log('Posterior probabilities (Multiple Evidences and Multiple Hypotheses):', posteriorMultipleEvidences);
+// Training data
+const trainingData = [
+  { decision: 'go-out', features: { weather: 'sunny', carStatus: 'working' } },
+  { decision: 'go-out', features: { weather: 'rainy', carStatus: 'broken' } },
+  { decision: 'go-out', features: { weather: 'sunny', carStatus: 'working' } },
+  { decision: 'go-out', features: { weather: 'sunny', carStatus: 'working' } },
+  { decision: 'go-out', features: { weather: 'sunny', carStatus: 'working' } },
+  { decision: 'stay-home', features: { weather: 'rainy', carStatus: 'broken' } },
+  { decision: 'stay-home', features: { weather: 'rainy', carStatus: 'broken' } },
+  { decision: 'stay-home', features: { weather: 'sunny', carStatus: 'working' } },
+  { decision: 'stay-home', features: { weather: 'sunny', carStatus: 'broken' } },
+  { decision: 'stay-home', features: { weather: 'rainy', carStatus: 'broken' } },
+];
 
-// Calculate posterior probabilities for Single Evidence and Multiple Hypotheses
-let evidence = 'e3'; // Replace with the specific evidence
+// Test data for prediction
+const testData = { weather: 'sunny', carStatus: 'working' };
 
-let posteriorSingleEvidence = calculatePosteriorSingleEvidence(hypotheses, evidence);
-console.log('Posterior probabilities (Single Evidence and Multiple Hypotheses):', posteriorSingleEvidence);
+// Create and train WeatherCarClassifier model
+const weatherCarClassifier = new WeatherCarClassifier();
+weatherCarClassifier.train(trainingData);
 
-
-let observedEvidences = ['e1', 'e3']; // Observe both E1 and E3
-
-// Calculate posterior probabilities for Multiple Evidences and Multiple Hypotheses
-let posteriorMultipleEvidences2 = calculatePosteriorMultipleEvidences(hypotheses, observedEvidences);
-console.log('Posterior probabilities (Multiple Evidences E1 and E3 and Multiple Hypotheses):', posteriorMultipleEvidences2);
-
-let evidence2 = 'e3'; // Replace with the specific evidence
-let h = ['h2']
-let posteriorSingleEvidence2 = calculatePosteriorSingleEvidence(h, evidence2);
-console.log('Posterior probabilities (Single Evidence):', posteriorSingleEvidence);
+// Make prediction
+const prediction = weatherCarClassifier.predict(testData);
+console.log('Predicted decision:', prediction);

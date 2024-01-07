@@ -261,7 +261,7 @@ const Home: React.FC = () => {
       const results = [];
 
       for (let i = 0; i < selectedHypotheses.length; i++) {
-        const roundedResult = posteriorMultipleEvidences[i].toFixed(2);
+        const roundedResult = posteriorMultipleEvidences[i].toFixed(3);
         const r = `${selectedHypotheses[i]} | ${selectedEvidences.join(" ")} = ${
           roundedResult
         }`;
