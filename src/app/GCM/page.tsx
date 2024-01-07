@@ -5,7 +5,7 @@ const GCM: React.FC = () => {
   const [n_data, set_n_data] = useState(3); // Set the initial number of data points
   const [n_features, set_N_featurs] = useState(3);
   const [observation, setObservation] = useState<number[]>(
-    Array.from({ length: 3 }, (_, i) => 0)
+    Array.from({ length: 3 }, (_, i) => 2)
   );
   const [message, setMessage] = useState("");
   const c: number = 0.5;

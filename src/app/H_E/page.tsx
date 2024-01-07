@@ -10,8 +10,8 @@ import {
 // Import necessary libraries and components
 
 const Home: React.FC = () => {
-  const [num_H, setNum_H] = useState<number | undefined>(undefined);
-  const [num_E, setNum_E] = useState<number | undefined>(undefined);
+  const [num_H, setNum_H] = useState<number | undefined>(3);
+  const [num_E, setNum_E] = useState<number | undefined>(3);
   const [result, setResult] = useState<string[]>([]);
   const [error, setError] = useState<string>();
 
@@ -235,14 +235,14 @@ const Home: React.FC = () => {
         selectedHypotheses,
         selectedEvidences[0]
       );
-      console.log(selectedHypotheses)
+      console.log(selectedHypotheses);
       const results = [];
       for (let i = 0; i < selectedHypotheses.length; i++) {
         const roundedResult = posteriorSingleEvidence[i].toFixed(3);
-        const r = `${selectedHypotheses[i]} | ${selectedEvidences.join(" ")} = ${
-          roundedResult
-        }`;
-        console.log(selectedHypotheses[i])
+        const r = `${selectedHypotheses[i]} | ${selectedEvidences.join(
+          " "
+        )} = ${roundedResult}`;
+        console.log(selectedHypotheses[i]);
         // Your code using 'r' inside the loop
         results.push(r);
       }
@@ -262,16 +262,18 @@ const Home: React.FC = () => {
 
       for (let i = 0; i < selectedHypotheses.length; i++) {
         const roundedResult = posteriorMultipleEvidences[i].toFixed(3);
-        const r = `${selectedHypotheses[i]} | ${selectedEvidences.join(" ")} = ${
-          roundedResult
-        }`;
+        const r = `${selectedHypotheses[i]} | ${selectedEvidences.join(
+          " "
+        )} = ${roundedResult}`;
         // Your code using 'r' inside the loop
         results.push(r);
       }
       setResult(results);
       setError("");
     } else {
-      setError("Invalid selection or no selection made.");
+      setError(
+        "Invalid selection , please select if it single or multi evidence "
+      );
     }
   };
 
@@ -302,9 +304,9 @@ const Home: React.FC = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col justify-center items-center gap-2">
+      <div className="flex flex-col justify-center text-2xl items-center gap-2">
         <label className="label-text">Calculation Type:</label>
-        <div className="flex gap-2">
+        <div className="flex gap-5 text-[#000066] font-semibold">
           <label>
             <input
               type="radio"
@@ -338,8 +340,11 @@ const Home: React.FC = () => {
           disabled={
             !num_H ||
             !num_E ||
+            !calculationType ||
             selectedEvidences.length === 0 ||
-            (calculationType === "single" && selectedEvidences.length !== 1) ||(calculationType === "multiple" && selectedEvidences.length == 1)
+            selectedHypotheses.length == 0 ||
+            (calculationType === "single" && selectedEvidences.length !== 1) ||
+            (calculationType === "multiple" && selectedEvidences.length == 1)
           }
         >
           Calculate Posterior
@@ -366,7 +371,11 @@ const Home: React.FC = () => {
           </div>
         ) : (
           result.map((value, index) => (
-            <div  key={index} role="alert" className="alert alert-info flex  items-center justify-center w-72">
+            <div
+              key={index}
+              role="alert"
+              className="alert alert-info flex  items-center justify-center w-72"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="stroke-current shrink-0 h-6 w-6"
@@ -381,7 +390,7 @@ const Home: React.FC = () => {
                 />
               </svg>
 
-              <span className=" uppercase" >
+              <span className=" uppercase">
                 {result && result[index] !== undefined && `${value} `}
               </span>
             </div>

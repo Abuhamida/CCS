@@ -208,7 +208,7 @@ const Navbays: React.FC = () => {
 
   return (
     <div className="pt-24 flex flex-col gap-5 items-center  min-h-screen">
-      <h1 className="text-3xl font-bold text-[#000066] ">Navbays</h1>
+      <h1 className="text-3xl font-bold text-[#000066] ">Naive Bayes</h1>
       <div className="flex gap-5">
         <div className="flex flex-col justify-center items-center ">
           <label htmlFor="numFeatures" className=" label label-text">
