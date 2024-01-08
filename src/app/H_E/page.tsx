@@ -34,6 +34,28 @@ const Home: React.FC = () => {
   const handleNumOf_H = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
     setNum_H(value);
+
+    setProbabilities((prevProbabilities) => {
+      const newProbabilities = { ...prevProbabilities };
+
+      for (
+        let i = Object.keys(prevProbabilities.hypotheses).length + 1;
+        i <= value;
+        i++
+      ) {
+        const hypothesisLabel = `h${i}`;
+
+        // Ensure the hypothesis is initialized with a default value
+        newProbabilities.hypotheses[hypothesisLabel] = 0;
+
+        for (const evidenceLabel in newProbabilities.evidence) {
+          // Ensure the evidence for the new hypothesis is initialized with a default value
+          newProbabilities.evidence[evidenceLabel][hypothesisLabel] = 0;
+        }
+      }
+
+      return newProbabilities;
+    });
   };
 
   const handleNumOf_E = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,26 +96,33 @@ const Home: React.FC = () => {
     hypothesis: string,
     value: number
   ) => {
-    setProbabilities((prevProbabilities) => ({
-      ...prevProbabilities,
-      evidence: {
-        ...prevProbabilities.evidence,
-        [evidence]: {
-          ...prevProbabilities.evidence[evidence],
+    setProbabilities((prevProbabilities) => {
+      const updatedProbabilities = {
+        ...prevProbabilities,
+        evidence: {
+          ...prevProbabilities.evidence,
+          [evidence]: {
+            ...prevProbabilities.evidence[evidence],
+            [hypothesis]: value,
+          },
+        },
+      };
+
+      return updatedProbabilities;
+    });
+  };
+  const handlePriorProbabilityChange = (hypothesis: string, value: number) => {
+    setProbabilities((prevProbabilities) => {
+      const updatedProbabilities = {
+        ...prevProbabilities,
+        hypotheses: {
+          ...prevProbabilities.hypotheses,
           [hypothesis]: value,
         },
-      },
-    }));
-  };
+      };
 
-  const handlePriorProbabilityChange = (hypothesis: string, value: number) => {
-    setProbabilities((prevProbabilities) => ({
-      ...prevProbabilities,
-      hypotheses: {
-        ...prevProbabilities.hypotheses,
-        [hypothesis]: value,
-      },
-    }));
+      return updatedProbabilities;
+    });
   };
 
   const renderProbabilityInputs = () => {
@@ -115,7 +144,10 @@ const Home: React.FC = () => {
         cells.push(
           <td key={`${hypothesisLabel}-${evidenceLabel}`}>
             <div className="flex flex-col gap-2">
-              <label className="label-text">{`Probability for ${hypothesisLabel} given ${evidenceLabel}:`}</label>
+              <label className="label-text ">
+                Probability for{" "}
+                <span className=" uppercase">{`${hypothesisLabel}|${evidenceLabel}:`}</span>{" "}
+              </label>
               <input
                 className="input input-bordered input-info w-full max-w-xs"
                 type="number"
@@ -137,8 +169,9 @@ const Home: React.FC = () => {
       rows.push(
         <tr key={`row-${evidenceLabel}`}>
           <th>
-            <label>
+            <label className="cursor-pointer label uppercase flex items-center">
               <input
+                className="checkbox checkbox-info"
                 type="checkbox"
                 value={evidenceLabel}
                 checked={selectedEvidences.includes(evidenceLabel)}
@@ -150,7 +183,7 @@ const Home: React.FC = () => {
                   )
                 }
               />
-              {evidenceLabel}
+              <span className="label-text">{evidenceLabel}</span> 
             </label>
           </th>
           {cells}
@@ -159,14 +192,15 @@ const Home: React.FC = () => {
     }
 
     return (
-      <table className="w-full">
+      <table className="">
         <thead>
           <tr>
             <th></th>
             {[...Array(num_H)].map((_, i) => (
-              <th key={`header-H${i + 1}`}>
-                <label>
+              <th key={`header-H${i + 1}`} className="">
+                <label className="cursor-pointer label uppercase">
                   <input
+                    className="checkbox checkbox-info"
                     type="checkbox"
                     value={`h${i + 1}`}
                     checked={selectedHypotheses.includes(`h${i + 1}`)}
@@ -178,7 +212,7 @@ const Home: React.FC = () => {
                       )
                     }
                   />
-                  {`H${i + 1}`}
+                  <span className="label-text">{`h${i + 1}`}</span> 
                 </label>
               </th>
             ))}

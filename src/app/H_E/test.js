@@ -1,4 +1,7 @@
-class WeatherCarClassifier {
+const fs = require("fs");
+const Papa = require("papaparse");
+
+class Classifier {
   constructor() {
     this.classProbabilities = {};
     this.featureProbabilities = {};
@@ -44,14 +47,35 @@ class WeatherCarClassifier {
 
     Object.keys(this.featureProbabilities).forEach((feature) => {
       Object.keys(this.featureProbabilities[feature]).forEach((decision) => {
-        const totalValues = Object.values(this.featureProbabilities[feature][decision]).reduce((acc, count) => acc + count, 0);
+        const totalValues = Object.values(
+          this.featureProbabilities[feature][decision]
+        ).reduce((acc, count) => acc + count, 0);
 
-        Object.keys(this.featureProbabilities[feature][decision]).forEach((value) => {
-          this.featureProbabilities[feature][decision][value] /= totalValues;
-        });
+        Object.keys(this.featureProbabilities[feature][decision]).forEach(
+          (value) => {
+            this.featureProbabilities[feature][decision][value] /= totalValues;
+          }
+        );
       });
     });
   }
+
+  loadTrainingDataFromCSV(filePath) {
+    const csvData = fs.readFileSync(filePath, "utf8");
+    const parsedData = Papa.parse(csvData, {
+      header: true,
+      skipEmptyLines: true,
+    });
+    const trainingData = parsedData.data.map((row, index) => {
+      return {
+        decision: row["Class"],
+        features: { weather: row["Weather"], car: row["Car"] },
+      };
+    });
+    console.log(trainingData);
+    this.train(trainingData);
+  }
+
 
   predict(features) {
     let maxProbability = -Infinity;
@@ -83,31 +107,21 @@ class WeatherCarClassifier {
     return predictedDecision;
   }
   
+
 }
 
 // Example usage:
 
-// Training data
-const trainingData = [
-  { decision: 'go-out', features: { weather: 'sunny', carStatus: 'working' } },
-  { decision: 'go-out', features: { weather: 'rainy', carStatus: 'broken' } },
-  { decision: 'go-out', features: { weather: 'sunny', carStatus: 'working' } },
-  { decision: 'go-out', features: { weather: 'sunny', carStatus: 'working' } },
-  { decision: 'go-out', features: { weather: 'sunny', carStatus: 'working' } },
-  { decision: 'stay-home', features: { weather: 'rainy', carStatus: 'broken' } },
-  { decision: 'stay-home', features: { weather: 'rainy', carStatus: 'broken' } },
-  { decision: 'stay-home', features: { weather: 'sunny', carStatus: 'working' } },
-  { decision: 'stay-home', features: { weather: 'sunny', carStatus: 'broken' } },
-  { decision: 'stay-home', features: { weather: 'rainy', carStatus: 'broken' } },
-];
+const superstoreClassifier = new Classifier();
+superstoreClassifier.loadTrainingDataFromCSV(
+  "C:/Users/asus/Desktop/weather.csv"
+);
 
 // Test data for prediction
-const testData = { weather: 'sunny', carStatus: 'working' };
-
-// Create and train WeatherCarClassifier model
-const weatherCarClassifier = new WeatherCarClassifier();
-weatherCarClassifier.train(trainingData);
-
+const testData = {
+  car: "sunny ",
+  weather: "working",
+};
 // Make prediction
-const prediction = weatherCarClassifier.predict(testData);
-console.log('Predicted decision:', prediction);
+const prediction = superstoreClassifier.predict(testData);
+console.log("Predicted decision:", prediction);
