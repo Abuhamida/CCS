@@ -8,7 +8,7 @@ const GCM: React.FC = () => {
     Array.from({ length: 3 }, (_, i) => 2)
   );
   const [message, setMessage] = useState("");
-  const c: number = 0.5;
+  const [c,setC]= useState<number>(0.5)
   const [classAInput, setClassAInput] = useState<string[]>([
     "2,5,1",
     "3,6,2",
@@ -51,7 +51,7 @@ const GCM: React.FC = () => {
   const handleN_features = (e: any) => {
     const value = parseInt(e.target.value, 10) || 0;
     set_N_featurs(value);
-    setObservation(Array.from({ length: value }, (_, i) => 0));
+    setObservation(Array.from({ length: value }));
   };
   const handleN_data = (e: any) => {
     const value = parseInt(e.target.value, 10) || 0;
@@ -118,6 +118,16 @@ const GCM: React.FC = () => {
             type="number"
             value={n_features}
             onChange={handleN_features}
+            title="number"
+          />
+        </div>
+        <div className=" flex flex-col ">
+          <label className="label-text ">The constant vlaue</label>
+          <input
+            className="input input-bordered input-info w-full max-w-xs"
+            type="number"
+            value={c}
+            onChange={(e)=>setC(Number(e.target.value))}
             title="number"
           />
         </div>
