@@ -73,14 +73,24 @@ const Navbays: React.FC = () => {
   ) => {
     setTrainingData((prevData) => {
       const newData = [...prevData];
-      newData[sampleIndex] = {
-        ...newData[sampleIndex],
-        [field]: value,
-      };
+      const currentSample = { ...newData[sampleIndex] };
+  
+      if (field === 'decision') {
+        currentSample.decision = value;
+      } else if (field.startsWith('feature')) {
+        currentSample.features = {
+          ...currentSample.features,
+          [field]: value,
+        };
+      }
+  
+      newData[sampleIndex] = currentSample;
+      console.log(newData);
       return newData;
     });
   };
-
+  
+  
   const handleTestDataChange = (field: string, value: string) => {
     setTestData((prevData) => ({
       ...prevData,
@@ -117,7 +127,8 @@ const Navbays: React.FC = () => {
           {Array.from({ length: numFeatures }, (_, j) => j + 1).map(
             (featureNum) => {
               const featureName = `feature${featureNum}`;
-              const featureValue = trainingData[i]?.features[featureName] || "";
+              const featureValue =
+                trainingData[i]?.features?.[featureName] || "";
 
               return (
                 <div

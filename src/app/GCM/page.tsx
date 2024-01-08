@@ -50,7 +50,7 @@ const GCM: React.FC = () => {
   };
   const handleN_features = (e: any) => {
     const value = parseInt(e.target.value, 10) || 0;
-    set_n_data(value);
+    set_N_featurs(value);
     setObservation(Array.from({ length: value }, (_, i) => 0));
   };
   const handleN_data = (e: any) => {
@@ -116,7 +116,7 @@ const GCM: React.FC = () => {
           <input
             className="input input-bordered input-info w-full max-w-xs"
             type="number"
-            value={n_data}
+            value={n_features}
             onChange={handleN_features}
             title="number"
           />
