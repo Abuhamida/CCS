@@ -63,8 +63,28 @@ const Navbays: React.FC = () => {
   };
 
   const handleNumSamplesChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNumSamples(parseInt(e.target.value, 10));
+    const newNumSamples = parseInt(e.target.value, 10);
+  
+    setNumSamples(newNumSamples);
+  
+    setTrainingData((prevData) => {
+      const newData = [...prevData];
+      const diff = newNumSamples - prevData.length;
+  
+      if (diff > 0) {
+        // Add new samples
+        for (let i = 0; i < diff; i++) {
+          newData.push({ decision: "", features: {} });
+        }
+      } else if (diff < 0) {
+        // Remove samples
+        newData.splice(diff);
+      }
+  
+      return newData;
+    });
   };
+  
 
   const handleTrainingDataChange = (
     sampleIndex: number,
