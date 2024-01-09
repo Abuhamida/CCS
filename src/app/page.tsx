@@ -142,7 +142,7 @@ export default function Home() {
                   <span className="text-[#00A0F3]">ID:</span>4211031
                 </h1>
                 <h1 className="text-xl flex gap-2  text-[#fafbf4] font-bold m-5 ">
-                  <span className="text-[#00A0F3]">group:</span>B4
+                  <span className="text-[#00A0F3]">group:</span>B3
                 </h1>
               </div>
             </div>

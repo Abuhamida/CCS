@@ -64,13 +64,13 @@ const Navbays: React.FC = () => {
 
   const handleNumSamplesChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newNumSamples = parseInt(e.target.value, 10);
-  
+
     setNumSamples(newNumSamples);
-  
+
     setTrainingData((prevData) => {
       const newData = [...prevData];
       const diff = newNumSamples - prevData.length;
-  
+
       if (diff > 0) {
         // Add new samples
         for (let i = 0; i < diff; i++) {
@@ -80,11 +80,10 @@ const Navbays: React.FC = () => {
         // Remove samples
         newData.splice(diff);
       }
-  
+
       return newData;
     });
   };
-  
 
   const handleTrainingDataChange = (
     sampleIndex: number,
@@ -94,23 +93,22 @@ const Navbays: React.FC = () => {
     setTrainingData((prevData) => {
       const newData = [...prevData];
       const currentSample = { ...newData[sampleIndex] };
-  
-      if (field === 'decision') {
+
+      if (field === "decision") {
         currentSample.decision = value;
-      } else if (field.startsWith('feature')) {
+      } else if (field.startsWith("feature")) {
         currentSample.features = {
           ...currentSample.features,
           [field]: value,
         };
       }
-  
+
       newData[sampleIndex] = currentSample;
       console.log(newData);
       return newData;
     });
   };
-  
-  
+
   const handleTestDataChange = (field: string, value: string) => {
     setTestData((prevData) => ({
       ...prevData,

@@ -144,9 +144,8 @@ const Home: React.FC = () => {
         cells.push(
           <td key={`${hypothesisLabel}-${evidenceLabel}`}>
             <div className="flex flex-col gap-2">
-              <label className="label-text ">
-                Probability for{" "}
-                <span className=" uppercase">{`${hypothesisLabel}|${evidenceLabel}:`}</span>{" "}
+              <label className="label label-text ">
+                Probability for {`${hypothesisLabel}|${evidenceLabel}:`}
               </label>
               <input
                 className="input input-bordered input-info w-full max-w-xs"
@@ -183,7 +182,7 @@ const Home: React.FC = () => {
                   )
                 }
               />
-              <span className="label-text">{evidenceLabel}</span> 
+              <span className="label-text">{evidenceLabel}</span>
             </label>
           </th>
           {cells}
@@ -192,28 +191,30 @@ const Home: React.FC = () => {
     }
 
     return (
-      <table className="">
+      <table>
         <thead>
-          <tr>
+          <tr className="">
             <th></th>
             {[...Array(num_H)].map((_, i) => (
               <th key={`header-H${i + 1}`} className="">
-                <label className="cursor-pointer label uppercase">
-                  <input
-                    className="checkbox checkbox-info"
-                    type="checkbox"
-                    value={`h${i + 1}`}
-                    checked={selectedHypotheses.includes(`h${i + 1}`)}
-                    onChange={() =>
-                      handleSelectionChange(
-                        "hypothesis",
-                        `h${i + 1}`,
-                        !selectedHypotheses.includes(`h${i + 1}`)
-                      )
-                    }
-                  />
-                  <span className="label-text">{`h${i + 1}`}</span> 
-                </label>
+                <div className="form-control w-16 flex flex-col items-center ml-20">
+                  <label className="label cursor-pointer">
+                    <span className="label label-text uppercase">{`h${i + 1}`}</span>
+                    <input
+                      className="checkbox checkbox-info"
+                      type="checkbox"
+                      value={`h${i + 1}`}
+                      checked={selectedHypotheses.includes(`h${i + 1}`)}
+                      onChange={() =>
+                        handleSelectionChange(
+                          "hypothesis",
+                          `h${i + 1}`,
+                          !selectedHypotheses.includes(`h${i + 1}`)
+                        )
+                      }
+                    />
+                  </label>
+                </div>
               </th>
             ))}
           </tr>
@@ -237,7 +238,7 @@ const Home: React.FC = () => {
       inputs.push(
         <div key={hypothesisLabel} className="flex gap-2">
           <div className="flex flex-col gap-2">
-            <label className="label-text">{`Prior Probability for ${hypothesisLabel}:`}</label>
+            <label className="label label-text">{`Prior Probability for ${hypothesisLabel}:`}</label>
             <input
               className="input input-bordered input-info w-full max-w-xs"
               type="number"
@@ -318,7 +319,7 @@ const Home: React.FC = () => {
       </h1>
       <div className="flex gap-5">
         <div className="flex flex-col">
-          <label className="label-text">Number of Hypotheses:</label>
+          <label className="label label-text">Number of Hypotheses:</label>
           <input
             className="input input-bordered input-info w-full max-w-xs"
             type="number"
@@ -328,7 +329,7 @@ const Home: React.FC = () => {
           />
         </div>
         <div className="flex flex-col">
-          <label className="label-text">Number of Evidence:</label>
+          <label className=" label label-text">Number of Evidence:</label>
           <input
             className="input input-bordered input-info w-full max-w-xs"
             type="number"
